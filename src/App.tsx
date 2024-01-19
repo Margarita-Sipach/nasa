@@ -1,12 +1,12 @@
-import { useEffect, useState } from "react"
+import { useState } from "react"
 import { Filter } from "./modules/Filter"
 
 function App() {
 
-	const [date, setDate] = useState(new Date)
+	const [_, setDate] = useState<string | string[]>()
 
 
-	const onChangeDate = (newDate: any) => {
+	const onChangeDate = (newDate: string | string[]) => {
 		setDate(newDate)
 	}
 
