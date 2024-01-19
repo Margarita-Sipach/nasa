@@ -1,0 +1,1 @@
+export type DateForms = string | boolean | Array<string | boolean>

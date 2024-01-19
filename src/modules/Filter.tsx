@@ -3,10 +3,10 @@ import { RangePickerProps } from "antd/es/date-picker";
 import dayjs from "dayjs";
 import customParseFormat from 'dayjs/plugin/customParseFormat';
 import { useState } from "react";
+import { DateForms } from "../types";
 
 dayjs.extend(customParseFormat);
 
-const dateFormat = 'YYYY-MM-DD';
 const locale = 'en-CA'
 
 export enum DateType{
@@ -15,14 +15,12 @@ export enum DateType{
 }
 
 interface FilterProps{
-	onChangeDate: (newDate: string | string[]) => void
+	onChangeDate: (newDate: DateForms) => void
 }
 
 export const Filter = ({onChangeDate}: FilterProps) => {
 
-	const nowDate = dayjs(new Date().toLocaleDateString(locale), dateFormat)
-
-	const [dateType, setDateType] = useState(DateType.day);
+    const [dateType, setDateType] = useState(DateType.day);
 
   const handleChangeRadio = (e: RadioChangeEvent) => {
     setDateType(e.target.value);
@@ -30,8 +28,11 @@ export const Filter = ({onChangeDate}: FilterProps) => {
 
   const handleChangeDate = (value: DatePickerProps['value'] | RangePickerProps['value'],
   dateString: [string, string] | string,) => {
-	onChangeDate(dateString)
+	const convertedDate = Array.isArray(dateString) ? dateString.map(i => convertDate(i)) : convertDate(dateString)
+	onChangeDate(convertedDate)
   };
+
+  const convertDate = (date: string) => date !== new Date().toLocaleDateString(locale) && date
 
   const disableDate = (current: any) => {
 	return current && current.valueOf() > Date.now()
@@ -45,8 +46,8 @@ export const Filter = ({onChangeDate}: FilterProps) => {
 	<div>
 	{
 		dateType === DateType.day
-		? <DatePicker disabledDate={disableDate} onChange={handleChangeDate} defaultValue={nowDate} />
-		: <DatePicker.RangePicker disabledDate={disableDate} onChange={handleChangeDate} defaultValue={[nowDate, nowDate]} />
+		? <DatePicker disabledDate={disableDate} onChange={handleChangeDate} />
+		: <DatePicker.RangePicker disabledDate={disableDate} onChange={handleChangeDate} />
 	}
 	</div>
 	
