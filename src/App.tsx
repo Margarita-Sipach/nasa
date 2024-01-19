@@ -5,9 +5,13 @@ import { DateForms } from "./types"
 
 function App() {
 	const [img, setImg] = useState('')
+	const [isLoad, setIsLoad] = useState(false)
 
 	const onChangeDate = (newDate?: DateForms) => {
-		getImg(newDate).then(i => setImg(i))
+		setIsLoad(true)
+		getImg(newDate)
+		.then(i => setImg(i))
+		.then(_ => setIsLoad(false))
 	}
 
 	useEffect(() => {
@@ -15,13 +19,11 @@ function App() {
 	}, [])
 
 	return <>
-	<div>
+	{isLoad && <span className="loader"></span>}
 	<Filter onChangeDate={onChangeDate}></Filter>
-	<div>
+	<div className="gallery">
 {Array.isArray(img) ? img.map(i => <img src={i} key={i} />) : <img src={img} />}
 	</div>
-	</div>
-	
 	</>
 }
 
