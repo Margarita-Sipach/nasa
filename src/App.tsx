@@ -1,18 +1,19 @@
 import { useEffect, useState } from "react"
 import { Filter } from "./modules/Filter"
-import { getImg } from "./api"
-import { DateForms } from "./types"
-import { Img } from "./ui/Img"
+import { getImg } from "./lib/api"
+import { ImgInfo, Params } from "./types"
+import { Gallery } from "./modules/Gallery"
+import { Spin } from "antd"
 
 function App() {
-	const [imgInfo, setImgInfo] = useState<any>('')
-	const [isLoad, setIsLoad] = useState(false)
+	const [imgInfo, setImgInfo] = useState<ImgInfo>({} as ImgInfo)
+	const [isLoading, setIsLoading] = useState(false)
 
-	const onChangeDate = (newDate?: DateForms) => {
-		setIsLoad(true)
+	const onChangeDate = (newDate: Params = '') => {
+		setIsLoading(true)
 		getImg(newDate)
 		.then(i => setImgInfo(i))
-		.then(_ => setIsLoad(false))
+		.then(() => setIsLoading(false))
 	}
 
 	useEffect(() => {
@@ -20,11 +21,9 @@ function App() {
 	}, [])
 
 	return <>
-	{isLoad && <span className="loader"></span>}
-	<Filter onChangeDate={onChangeDate}></Filter>
-	<div className="gallery">
-{Array.isArray(imgInfo) ? imgInfo.map((i) => <Img {...i} key={i} />) : <Img {...imgInfo} />}
-	</div>
+		{isLoading && <Spin size="large"/>}
+		<Filter onChangeDate={onChangeDate}/>
+		<Gallery imgInfo={imgInfo}/>
 	</>
 }
 

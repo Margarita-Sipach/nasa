@@ -1,1 +1,8 @@
-export type DateForms = string | boolean | Array<string | boolean>
+export interface ImgInfo{
+	url: string
+	title: string
+}
+
+export type OneOrArr<T> = T | T[]
+
+export type Params = OneOrArr<string>

@@ -1,9 +1,10 @@
-import { DatePicker, DatePickerProps, Radio, RadioChangeEvent } from "antd";
-import { RangePickerProps } from "antd/es/date-picker";
+import { DatePicker, Radio, RadioChangeEvent } from "antd";
 import dayjs from "dayjs";
 import customParseFormat from 'dayjs/plugin/customParseFormat';
 import { useState } from "react";
-import { DateForms } from "../types";
+import { OneOrArr, Params } from "../types";
+import { convertOneOrArr } from "../lib/fn";
+import { RangePickerProps } from "antd/es/date-picker";
 
 dayjs.extend(customParseFormat);
 
@@ -15,42 +16,43 @@ export enum DateType{
 }
 
 interface FilterProps{
-	onChangeDate: (newDate: DateForms) => void
+	onChangeDate: (newDate: OneOrArr<string>) => void
 }
 
 export const Filter = ({onChangeDate}: FilterProps) => {
+  const [radio, setRadio] = useState(DateType.day);
 
-    const [dateType, setDateType] = useState(DateType.day);
+  const disableDate: RangePickerProps['disabledDate'] = (current) => current && current.valueOf() > Date.now()
 
-  const handleChangeRadio = (e: RadioChangeEvent) => {
-    setDateType(e.target.value);
-  };
+  const handleRadio = (e: RadioChangeEvent) => setRadio(e.target.value);
 
-  const handleChangeDate = (value: DatePickerProps['value'] | RangePickerProps['value'],
-  dateString: [string, string] | string,) => {
-	const convertedDate = Array.isArray(dateString) ? dateString.map(i => convertDate(i)) : convertDate(dateString)
+  const handleDate = (_: unknown, newDate: Params) => {
+	const convertedDate = convertOneOrArr(newDate, convertDate)
 	onChangeDate(convertedDate)
   };
 
-  const convertDate = (date: string) => date !== new Date().toLocaleDateString(locale) && date
-
-  const disableDate = (current: any) => {
-	return current && current.valueOf() > Date.now()
-  }
+  const convertDate = (date: Params) => date === new Date().toLocaleDateString(locale) ? '' : date  
   
   return (
 	<div className="filter">
-    <Radio.Group onChange={handleChangeRadio} value={dateType}>
-		{Object.values(DateType).map((i) => <Radio value={i} key={i} style={{color: 'white'}}>{i}</Radio>)}
-    </Radio.Group>
-	<div>
-	{
-		dateType === DateType.day
-		? <DatePicker disabledDate={disableDate} onChange={handleChangeDate} />
-		: <DatePicker.RangePicker disabledDate={disableDate} onChange={handleChangeDate} />
-	}
-	</div>
-	
+        <Radio.Group onChange={handleRadio} 
+                     value={radio}
+        >
+            {Object.values(DateType).map((i) => <Radio value={i} key={i}>{i}</Radio>)}
+		</Radio.Group>
+        <div>
+		{
+			radio === DateType.day
+			? <DatePicker 
+				disabledDate={disableDate} 
+				onChange={handleDate} 
+			/>
+			: <DatePicker.RangePicker 
+				disabledDate={disableDate} 
+				onChange={handleDate} 
+			/>
+		}
+		</div>
 	</div>
   );
 }
