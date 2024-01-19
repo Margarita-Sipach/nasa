@@ -2,15 +2,16 @@ import { useEffect, useState } from "react"
 import { Filter } from "./modules/Filter"
 import { getImg } from "./api"
 import { DateForms } from "./types"
+import { Img } from "./ui/Img"
 
 function App() {
-	const [img, setImg] = useState('')
+	const [imgInfo, setImgInfo] = useState<any>('')
 	const [isLoad, setIsLoad] = useState(false)
 
 	const onChangeDate = (newDate?: DateForms) => {
 		setIsLoad(true)
 		getImg(newDate)
-		.then(i => setImg(i))
+		.then(i => setImgInfo(i))
 		.then(_ => setIsLoad(false))
 	}
 
@@ -22,7 +23,7 @@ function App() {
 	{isLoad && <span className="loader"></span>}
 	<Filter onChangeDate={onChangeDate}></Filter>
 	<div className="gallery">
-{Array.isArray(img) ? img.map(i => <img src={i} key={i} />) : <img src={img} />}
+{Array.isArray(imgInfo) ? imgInfo.map((i) => <Img {...i} key={i} />) : <Img {...imgInfo} />}
 	</div>
 	</>
 }

@@ -4,8 +4,7 @@ const URL = 'https://api.nasa.gov/planetary/apod?api_key=kh93AnRphCVlsF1rvTxcPi0
 
 export const getImg = async(newParams?: DateForms) => {
 	const params = generateParams(newParams)
-	const data = (await axios.get(URL, {params})).data
-	return Array.isArray(data) ? data.map(({url}) => url) : data?.url;
+	return (await axios.get(URL, {params})).data
 }
 
 const generateParams = (newParams?: DateForms) => {

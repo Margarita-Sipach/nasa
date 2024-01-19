@@ -41,7 +41,7 @@ export const Filter = ({onChangeDate}: FilterProps) => {
   return (
 	<div className="filter">
     <Radio.Group onChange={handleChangeRadio} value={dateType}>
-		{Object.values(DateType).map((i) => <Radio value={i} key={i}>{i}</Radio>)}
+		{Object.values(DateType).map((i) => <Radio value={i} key={i} style={{color: 'white'}}>{i}</Radio>)}
     </Radio.Group>
 	<div>
 	{

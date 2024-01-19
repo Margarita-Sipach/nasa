@@ -1,9 +1,18 @@
+*{
+	padding: 0;
+	margin: 0;
+}
+
 #root{
 	padding: 50px;
 	display: flex;
 	flex-direction: column;
 	align-items: center;
 	gap: 50px;
+	background: url('https://i.ytimg.com/vi/mPcoBfQ5j-k/maxresdefault.jpg') center no-repeat;
+	background-size: cover;
+	min-height: 100vh;
+	background-attachment: fixed;
 }
 
 .filter{
@@ -15,17 +24,36 @@
 
 .gallery{
 	display: flex;
-	gap: 6px;
+	gap: 30px;
 	width: 100%;
 	justify-content: center;
 	flex-wrap: wrap;
 }
 
+.img{
+	width: calc(30% - 15px);
+	border: 2px solid white;
+	position: relative;
+}
+
 img{
-	width: calc(30% - 3px);
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+}
+
+h3{
+	position: absolute;
+	bottom: 5px;
+	left: 5px;
+	color: white;
 }
 
 .loader {
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
     width: 48px;
     height: 48px;
     border: 5px solid #FFF;
